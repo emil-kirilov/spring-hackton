@@ -1,0 +1,23 @@
+<div class="row">
+  <%= link_to "Home", home_url %>
+  <%= link_to "Weapons", weapons_path %>
+</div>
+
+<div class="row">
+  <% @weapon.skins.each do |skin| %>
+    <div class='col-md-3'>
+    <% url = "http://steamcommunity.com/market/priceoverview" %>
+       <% market_hash = params[:name].upcase + ' | ' + skin.name + " (Factory New)" %>
+       <% skin_info = RestClient.get(url,{
+         :params => {:country => 'DE',
+                     :currency => 1, :appid => 730,
+                     :market_hash_name => market_hash }}) %>
+       <%= image_tag(skin.picture) %>
+    </div>
+
+     <div class='col-md-1'>
+       <%= skin.name %>
+       Starting at : <%= JSON::parse(skin_info)['lowest_price'] %>
+     </div>
+  <% end %>
+</div>
